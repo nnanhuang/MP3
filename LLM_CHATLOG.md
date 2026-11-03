@@ -6,7 +6,7 @@
 The course policy requires LLM chat logs to be submitted with the code. Below is a cleaned-up
 record of every conversation I had with the LLM for this MP. Some of my prompts were written in
 Chinese; they are translated into English here. One message contained a database password; it has
-been removed, and the password was rotated afterwards.
+been removed from this log.
 
 ---
 
@@ -78,13 +78,39 @@ been removed, and the password was rotated afterwards.
 - Added `.nvmrc` (`24`) so that Render and `nvm` use Node 24 LTS.
 - Wrote this log.
 
+### Prompt 2
+> Do it for me. (the remaining setup and deployment steps)
+
+**What the LLM did** (in my own Chrome, where I was already signed in)
+- Pointed the local `origin` at my new GitHub repository and pushed the code (`.env` is not in
+  the repository).
+- Read the cluster address from the Atlas "Connect" dialog and wrote the connection string into
+  `.env` with a `<db_password>` placeholder.
+- Filled in the Render web service form: deploy from my public GitHub repository, build command
+  `npm install`, start command `npm start`, free instance type, and an environment variable named
+  `MONGODB_URI`.
+- It did not enter any password. It wrote a small script that asked me for the password in my own
+  terminal and put it into `.env`; I pasted the connection string into Render myself.
+
+### Prompt 3
+> Everything is done, check what else is left.
+
+**What the LLM did**
+- Checked that the local server can connect to Atlas and that the Render deployment is live.
+- Set `API_URL` in `submit.js` and ran the autograder: 90/100. The only failures were that
+  `DELETE /users/:id` and `DELETE /tasks/:id` must respond `204` with an empty body (they returned
+  `200` with the deleted document).
+- Changed both endpoints to `204` with an empty body, re-ran the local tests (all passed),
+  pushed, and redeployed on Render.
+- Re-ran the autograder: **100/100**. Checked that the autograder's test data was deleted
+  afterwards.
+
 ---
 
 ## What I did myself
-- Created the MongoDB Atlas cluster, database user and network access rule, and put the
-  connection string into `.env` and into Render's environment variables.
-- Created my own GitHub repository from the template and pushed the code.
-- Deployed the API on Render, set `API_URL` in `submit.js`, and ran `npm run submit`.
+- Created the MongoDB Atlas cluster and database user, added the `0.0.0.0/0` network access rule,
+  and entered the database password into `.env` and into Render's `MONGODB_URI`.
+- Created my GitHub repository and signed in to Render; clicked "Deploy web service".
 - Filled out the submission form.
 
 ## Sources
